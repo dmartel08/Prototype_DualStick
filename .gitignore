@@ -4,7 +4,10 @@
 [Bb]uild/
 [Bb]uilds/
 Assets/AssetStoreTools*
-END_Unity/Library/metadata
+
+#Fuck the library
+END_Unity/Library
+
 # Visual Studio cache directory
 .vs/
 
