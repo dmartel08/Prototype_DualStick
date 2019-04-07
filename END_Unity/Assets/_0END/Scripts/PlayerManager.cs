@@ -9,7 +9,7 @@ public class PlayerManager : MonoBehaviour
 {
     private GameObject player;
     private Rigidbody playerRb;
-    public float playerSpeed = 2;
+    public float playerSpeed = 2.5f;
 
     public Animator playerAc;
 
@@ -38,7 +38,7 @@ public class PlayerManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void LateUpdate()
     {
         
         if (canMove)
@@ -56,7 +56,11 @@ public class PlayerManager : MonoBehaviour
             BasicAttack();
         }
     }
-
+    
+    /// <summary>
+    /// Some rigid body quirks with capsule collider. Check to see if APPLY ROOT MOTION on the animator component in Inspector window is turned OFF.
+    /// Otherwise the character mesh seems to pop out of the capsule bounds. Could also be an issue with Update (set to LateUpdate for physics...)
+    /// </summary>
     void Movement()
     {
         Vector3 input_Lstick = new Vector3(Input.GetAxisRaw("Horizontal"), 0.0f, Input.GetAxisRaw("Vertical"));
@@ -66,27 +70,38 @@ public class PlayerManager : MonoBehaviour
 
         if (input_Lstick.x != 0 || input_Lstick.z != 0)
         {
+            int lookInversion = 1;
             if (input_Rstick.x == 0 && input_Rstick.z == 0)
             {
                 playerRb.transform.rotation = Quaternion.LookRotation(input_Lstick);
+                lookInversion = 1;
                 Debug.Log("if a");
             }
 
             if (input_Rstick.x != 0 || input_Rstick.z != 0)
             {
                 playerRb.transform.rotation = Quaternion.LookRotation(input_Rstick);
+                lookInversion = -1;
                 Debug.Log("if b");
             }
 
+            playerAc.SetFloat("speedh", input_Lstick.x);
+            playerAc.SetFloat("speedv", input_Lstick.z * lookInversion);
+
+        }
+        else if (input_Rstick.x != 0 || input_Rstick.z != 0)
+        {
+            playerRb.transform.rotation = Quaternion.LookRotation(input_Rstick);
+            Debug.Log("if b");
         }
 
         if (Input.GetKey(KeyCode.LeftShift) || Input.GetButton("L_Bumper"))
         {
-            playerSpeed = 5.0f;
+            playerSpeed = 4.0f;
         }
         else
         {
-            playerSpeed = 2.0f;
+            playerSpeed = 2.5f;
         }
     }
 

@@ -1,24 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject myGO;
     public GameObject player1GO;
+    public GameObject enemyProtoGO;
+
+    public Collider p1Trigger;
+    
 
     // Start is called before the first frame update
     void Start()
     {
 
-
-        if (myGO != null)
-        {
-            Debug.Log("I exist");
-        }
-        else
-            Debug.Log("I don't exist");
-
+        p1Trigger = player1GO.transform.Find("Player_Trigger").GetComponent<Collider>();
 
     }
 
