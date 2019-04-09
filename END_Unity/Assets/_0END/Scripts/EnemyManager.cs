@@ -19,7 +19,9 @@ public class EnemyManager : MonoBehaviour
         idle,
         patrolling,
         engaging,
-        attacking
+        attacking,
+        damaged,
+        dead
     };
 
     private int behaviour;
@@ -81,10 +83,13 @@ public class EnemyManager : MonoBehaviour
         return behaviour;
     }
 
+    /// <summary>
+    /// Be aware of what colliders. Whethere it's "sword" or hitbox. Or Enter/Stay, etc..
+    /// </summary>
     private void OnTriggerEnter(Collider other)
     {
 
-        Collider playerTrigger = gM.p1Trigger;
+        Collider playerTrigger = gM.player1_M.trigger;
 
         if (other == playerTrigger)
         {
@@ -92,13 +97,38 @@ public class EnemyManager : MonoBehaviour
             Debug.Log("I ran into player");
             Debug.Log(other);
         }
+
+        //If in OnTriggerEnter, calls once. (The proper call it would seem)
+        if (other == gM.player1_M.hitZone)  //hitZone, not sword
+        {
+            if (gM.player1_M.weaponEvent.hitting == true)
+            {
+                Debug.Log("I the " + this.gameObject + "am hit!");
+            }
+        }
+
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        ////If in OnTriggerStay, calls for as long as true... multiple hits (wrong it seems).
+        //Collider playerTrigger = gM.player1_M.trigger;
+
+        //if (other == gM.player1_M.sword)
+        //{
+        //    if (gM.player1_M.weaponEvent.hitting == true)
+        //    {
+        //        Debug.Log("I the " + this.gameObject + "am hit!");
+        //    }
+        //}
+    }
+
     private void OnTriggerExit(Collider other)
     {
 
-        Collider playerTrigger = gM.p1Trigger;
+        Collider playerTrigger = gM.player1_M.trigger;
 
-        if(other == playerTrigger)
+        if (other == playerTrigger)
         {
             found = false;
             Debug.Log("I lost player");

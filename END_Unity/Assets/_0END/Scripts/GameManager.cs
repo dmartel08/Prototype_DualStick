@@ -6,17 +6,15 @@ using UnityEngine.AI;
 public class GameManager : MonoBehaviour
 {
     public GameObject player1GO;
+    public PlayerManager player1_M;
     public GameObject enemyProtoGO;
 
-    public Collider p1Trigger;
-    
 
     // Start is called before the first frame update
     void Start()
     {
-
-        p1Trigger = player1GO.transform.Find("Player_Trigger").GetComponent<Collider>();
-
+        player1_M = player1GO.GetComponent<PlayerManager>();
+        
     }
 
     // Update is called once per frame

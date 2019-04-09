@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1202659853}
   m_Layer: 0
   m_Name: Player_Trigger
-  m_TagString: Untagged
+  m_TagString: P1_Trigger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -77,6 +77,7 @@ Transform:
   m_Children:
   - {fileID: 2460874482249017017}
   - {fileID: 1202659852}
+  - {fileID: 6782648292569159923}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -95,6 +96,11 @@ MonoBehaviour:
   playerSpeed: 2
   playerAc: {fileID: 0}
   canMove: 0
+  weaponEvent: {fileID: 0}
+  trigger: {fileID: 1202659853}
+  sword: {fileID: 7861953930338580314}
+  hitZone: {fileID: 1317402956806551464}
+  meleeAttack: 0
 --- !u!136 &2465229995302271104
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -125,6 +131,94 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!1 &5865314985073654434
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7667186529669797407}
+  - component: {fileID: 7861953930338580314}
+  m_Layer: 0
+  m_Name: HitBox_Sword
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7667186529669797407
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5865314985073654434}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 2.376}
+  m_LocalScale: {x: 0.5163, y: 0.30853, z: 3.0990083}
+  m_Children: []
+  m_Father: {fileID: 2460892844229908403}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &7861953930338580314
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5865314985073654434}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &6434845068243222261
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6782648292569159923}
+  - component: {fileID: 1317402956806551464}
+  m_Layer: 0
+  m_Name: Player_HitZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6782648292569159923
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6434845068243222261}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.989, z: 0.826}
+  m_LocalScale: {x: 0.8243, y: 0.75363, z: 1.2594105}
+  m_Children: []
+  m_Father: {fileID: 2465229995302271166}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1317402956806551464
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6434845068243222261}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &2465229995811415795
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -195,6 +289,12 @@ PrefabInstance:
 --- !u!4 &2460874482249017017 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4655139138601034, guid: dca8e056b77d49c4aafe4dbcc2bab713,
+    type: 3}
+  m_PrefabInstance: {fileID: 2465229995811415795}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2460892844229908403 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4671405331706176, guid: dca8e056b77d49c4aafe4dbcc2bab713,
     type: 3}
   m_PrefabInstance: {fileID: 2465229995811415795}
   m_PrefabAsset: {fileID: 0}

@@ -17,6 +17,21 @@ public class PlayerManager : MonoBehaviour
 
     public bool canMove;
 
+    /// <summary>
+    /// Set these in inspector because "Find" is fucking stupid.
+    /// </summary>
+    [Header("Attacking stuff")]
+    public Player_AnimEvent weaponEvent;
+    [Space(10)]
+    [Header("Hitboxes")]
+    public Collider trigger;
+    public Collider sword;
+    public Collider hitZone;
+
+    [Space(10)]
+    public bool meleeAttack = false;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +39,7 @@ public class PlayerManager : MonoBehaviour
         playerAc = this.GetComponentInChildren<Animator>();
         animState = playerAc.GetCurrentAnimatorStateInfo(0);
 
+        weaponEvent = this.GetComponentInChildren<Player_AnimEvent>();
         canMove = true;
     }
 
@@ -53,7 +69,7 @@ public class PlayerManager : MonoBehaviour
         // Button for ease
         if(Input.GetButton("R_Bumper") && !playerAc.GetCurrentAnimatorStateInfo(0).IsName("Attack1h1"))
         {
-            BasicAttack();
+            BasicRangedAttack();
         }
     }
     
@@ -114,7 +130,15 @@ public class PlayerManager : MonoBehaviour
     {
 
         playerAc.SetTrigger("Attack1h1");
+        playerAc.SetFloat("animSpeed", 1.0f);
+        
+    }
 
+    
+    void BasicRangedAttack()
+    {
+        playerAc.SetTrigger("Attack1h1");
+        playerAc.SetFloat("animSpeed", 0.5f);
     }
 
     void CheckMoveState()
