@@ -14,6 +14,9 @@ public class EnemyManager : MonoBehaviour
 
     private NavMeshAgent agent;
 
+    public float health = 100;
+    public float damage = 0;
+
     private enum FIGHTSTATE
     {
         idle,
@@ -25,7 +28,8 @@ public class EnemyManager : MonoBehaviour
     };
 
     private int behaviour;
-    private bool found = false;
+    public bool found = false;
+    public bool gotHit = false;
 
 
     void Start()
@@ -33,6 +37,7 @@ public class EnemyManager : MonoBehaviour
         gM = FindObjectOfType<GameManager>();
         AC = this.GetComponent<Animator>();
         agent = this.GetComponent<NavMeshAgent>();
+
         behaviour = (int)FIGHTSTATE.engaging;
     }
 
@@ -50,13 +55,20 @@ public class EnemyManager : MonoBehaviour
 
         if(state == (int)FIGHTSTATE.engaging)
         {
+            agent.isStopped = false; //allow agent to seek again
             agent.destination = gM.player1GO.transform.position;
             AC.SetFloat("speedh", 1);
         }
 
         if (state == (int)FIGHTSTATE.attacking)
         {
-            agent.destination = this.transform.localPosition;
+
+            if (AC.GetCurrentAnimatorStateInfo(0).IsName("Attack1h1"))
+            {
+                agent.isStopped = true; //stop the agent from seeking/moving
+                agent.velocity = Vector3.zero; //any latent velocity should be zerod (no momentum)
+            }
+                
             if (!AC.GetCurrentAnimatorStateInfo(0).IsName("Attack1h1"))
             {
                 
@@ -65,10 +77,24 @@ public class EnemyManager : MonoBehaviour
             }
             
         }
+
+        if(state == (int)FIGHTSTATE.damaged)
+        {
+            agent.isStopped = true; //stop the agent from seeking/moving
+            agent.velocity = Vector3.zero; //any latent velocity should be zerod (no momentum)
+           // health = health - damage;
+
+        }
     }
 
     public int EnemyState()
     {
+        if(gotHit == true)
+        {
+            behaviour = (int)FIGHTSTATE.damaged;
+            return behaviour;
+        }
+
         if(found == false)
         {
             behaviour = (int)FIGHTSTATE.engaging;
@@ -83,6 +109,12 @@ public class EnemyManager : MonoBehaviour
         return behaviour;
     }
 
+    public void FinishedHit()
+    {
+        Debug.Log("THE FINISHED HIT WAS HIT");
+        gotHit = false;
+    }
+
     /// <summary>
     /// Be aware of what colliders. Whethere it's "sword" or hitbox. Or Enter/Stay, etc..
     /// </summary>
@@ -94,17 +126,20 @@ public class EnemyManager : MonoBehaviour
         if (other == playerTrigger)
         {
             found = true;
-            Debug.Log("I ran into player");
-            Debug.Log(other);
         }
 
-        //If in OnTriggerEnter, calls once. (The proper call it would seem)
+        ////If in OnTriggerEnter, calls once. (The proper call it would seem)
         if (other == gM.player1_M.hitZone)  //hitZone, not sword
         {
-            if (gM.player1_M.weaponEvent.hitting == true)
-            {
+
+            //if (gM.player1_M.weaponEvent.hitting == true)
+            //{
                 Debug.Log("I the " + this.gameObject + "am hit!");
-            }
+                AC.SetTrigger("Hit1");
+                damage = 10;  //set the damage based on weapon, so ranged hitbox might change this to 20
+                gotHit = true;
+            health = health - damage;  //fucking fuck why doesn't this just decrease BY FUCKING TEN
+            //}
         }
 
     }
@@ -113,14 +148,8 @@ public class EnemyManager : MonoBehaviour
     {
         ////If in OnTriggerStay, calls for as long as true... multiple hits (wrong it seems).
         //Collider playerTrigger = gM.player1_M.trigger;
-
-        //if (other == gM.player1_M.sword)
-        //{
-        //    if (gM.player1_M.weaponEvent.hitting == true)
-        //    {
-        //        Debug.Log("I the " + this.gameObject + "am hit!");
-        //    }
-        //}
+        
+       
     }
 
     private void OnTriggerExit(Collider other)
@@ -130,8 +159,8 @@ public class EnemyManager : MonoBehaviour
 
         if (other == playerTrigger)
         {
+            
             found = false;
-            Debug.Log("I lost player");
         }
     }
 

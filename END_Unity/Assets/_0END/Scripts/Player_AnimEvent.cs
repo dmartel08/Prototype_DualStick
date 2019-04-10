@@ -11,7 +11,7 @@ using UnityEngine;
 public class Player_AnimEvent : MonoBehaviour
 {
 
-    public bool hitting;
+    public bool hitting = false;
 
     public void HitStart()
     {

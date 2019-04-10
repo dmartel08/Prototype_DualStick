@@ -1152,6 +1152,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemySpeed: 2.5
   AC: {fileID: 0}
+  enemyEvent: {fileID: 0}
+  found: 0
+  gotHit: 0
 --- !u!54 &1365909011
 Rigidbody:
   m_ObjectHideFlags: 0

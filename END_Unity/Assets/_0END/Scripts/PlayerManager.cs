@@ -71,6 +71,20 @@ public class PlayerManager : MonoBehaviour
         {
             BasicRangedAttack();
         }
+
+        ///Weapon event, because trigger enter/stay... SUCKS need to hide and show the collision volume. Based on the anim event of the sword swing.
+        ///This way, because the damage is under TriggerEnter (see EnemyManager), the collision volume disappears and reappears
+        ///activating properly. Otherwise if enemy just stands in front, they're not leaving the volume. 
+        if (weaponEvent.hitting == false)
+        {
+            hitZone.enabled = false;
+        }
+
+        if (weaponEvent.hitting == true)
+        {
+            hitZone.enabled = true;
+        }
+        
     }
     
     /// <summary>
