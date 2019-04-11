@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     public GameObject player1GO;
     public PlayerManager player1_M;
     public GameObject enemyProtoGO;
-
+    public GameObject fireballGO;
 
     // Start is called before the first frame update
     void Start()

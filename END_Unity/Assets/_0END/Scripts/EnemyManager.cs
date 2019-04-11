@@ -134,12 +134,21 @@ public class EnemyManager : MonoBehaviour
 
             //if (gM.player1_M.weaponEvent.hitting == true)
             //{
-                Debug.Log("I the " + this.gameObject + "am hit!");
+                Debug.Log("I the " + this.gameObject + "am hit by SWORD!");
                 AC.SetTrigger("Hit1");
                 damage = 10;  //set the damage based on weapon, so ranged hitbox might change this to 20
                 gotHit = true;
-            health = health - damage;  //fucking fuck why doesn't this just decrease BY FUCKING TEN
+                health = health - damage;  //fucking fuck why doesn't this just decrease BY FUCKING TEN
             //}
+        }
+
+        if (other == gM.player1_M.sp_fireball.GetComponent<Collider>())
+        {
+            Debug.Log("I the " + this.gameObject + "am hit by FIREBALL!");
+            AC.SetTrigger("Hit1");
+            damage = 30;  //set the damage based on weapon, so ranged hitbox might change this to 20
+            gotHit = true;
+            health = health - damage;
         }
 
     }

@@ -108,12 +108,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerSpeed: 2
   playerAc: {fileID: 0}
-  canMove: 0
+  canMoveAnim: 0
+  canMoveSpell: 0
   weaponEvent: {fileID: 0}
   trigger: {fileID: 1202659853}
   sword: {fileID: 7861953930338580314}
   hitZone: {fileID: 1317402956806551464}
   meleeAttack: 0
+  sp_fireball: {fileID: 3271449630239120713, guid: 467b55a1b32b3a6428c4c908a03ea923,
+    type: 3}
+  rangeCooldown: 1
+  beginRangeCooldown: 0
 --- !u!136 &2465229995302271104
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -200,7 +205,7 @@ GameObject:
   - component: {fileID: 1317402956806551464}
   m_Layer: 0
   m_Name: Player_HitZone
-  m_TagString: Untagged
+  m_TagString: P1_HitZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -213,8 +218,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6434845068243222261}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.989, z: 0.826}
-  m_LocalScale: {x: 1.2343262, y: 0.75363, z: 1.2594105}
+  m_LocalPosition: {x: 0, y: 0.989, z: 0.549}
+  m_LocalScale: {x: 0.6839525, y: 0.75363, z: 1.0494957}
   m_Children: []
   m_Father: {fileID: 2465229995302271166}
   m_RootOrder: 2
@@ -228,7 +233,7 @@ BoxCollider:
   m_GameObject: {fileID: 6434845068243222261}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -239,10 +244,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2465229995302271166}
     m_Modifications:
-    - target: {fileID: 1349150361055734, guid: dca8e056b77d49c4aafe4dbcc2bab713, type: 3}
-      propertyPath: m_Name
-      value: SKELETON
-      objectReference: {fileID: 0}
     - target: {fileID: 4655139138601034, guid: dca8e056b77d49c4aafe4dbcc2bab713, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -286,6 +287,10 @@ PrefabInstance:
     - target: {fileID: 4655139138601034, guid: dca8e056b77d49c4aafe4dbcc2bab713, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1349150361055734, guid: dca8e056b77d49c4aafe4dbcc2bab713, type: 3}
+      propertyPath: m_Name
+      value: SKELETON
       objectReference: {fileID: 0}
     - target: {fileID: 95690985424869934, guid: dca8e056b77d49c4aafe4dbcc2bab713,
         type: 3}

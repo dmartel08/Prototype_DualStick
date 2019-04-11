@@ -718,6 +718,8 @@ MonoBehaviour:
   player1GO: {fileID: 1790419805}
   player1_M: {fileID: 0}
   enemyProtoGO: {fileID: 1365909006}
+  fireballGO: {fileID: 7443108827836282673, guid: 467b55a1b32b3a6428c4c908a03ea923,
+    type: 3}
 --- !u!4 &391232344
 Transform:
   m_ObjectHideFlags: 0
@@ -4508,10 +4510,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1317402956806551464, guid: fee9152dea6a7bb4c84c4b495e12cb73,
+    - target: {fileID: 2465229995302271167, guid: fee9152dea6a7bb4c84c4b495e12cb73,
         type: 3}
-      propertyPath: m_Enabled
-      value: 0
+      propertyPath: rangeCooldown
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fee9152dea6a7bb4c84c4b495e12cb73, type: 3}

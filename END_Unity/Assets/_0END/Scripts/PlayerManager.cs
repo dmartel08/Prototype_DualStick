@@ -15,7 +15,8 @@ public class PlayerManager : MonoBehaviour
 
     AnimatorStateInfo animState;
 
-    public bool canMove;
+    public bool canMoveAnim;
+    public bool canMoveSpell;
 
     /// <summary>
     /// Set these in inspector because "Find" is fucking stupid.
@@ -31,6 +32,11 @@ public class PlayerManager : MonoBehaviour
     [Space(10)]
     public bool meleeAttack = false;
 
+    [Space(10)]
+    [Header("Spells")]
+    public Spell_Fireball sp_fireball;
+    private float rangeCooldown = 0.5f;
+    public bool beginRangeCooldown;
 
     // Start is called before the first frame update
     void Start()
@@ -40,7 +46,8 @@ public class PlayerManager : MonoBehaviour
         animState = playerAc.GetCurrentAnimatorStateInfo(0);
 
         weaponEvent = this.GetComponentInChildren<Player_AnimEvent>();
-        canMove = true;
+        canMoveAnim = true;
+        canMoveSpell = true;
     }
 
     private void Update()
@@ -53,11 +60,16 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        RangeCooldown();
+    }
+
     // Update is called once per frame
     void LateUpdate()
     {
         
-        if (canMove)
+        if (canMoveAnim && canMoveSpell)
         {
             Movement();
         }
@@ -70,6 +82,8 @@ public class PlayerManager : MonoBehaviour
         if(Input.GetButton("R_Bumper") && !playerAc.GetCurrentAnimatorStateInfo(0).IsName("Attack1h1"))
         {
             BasicRangedAttack();
+            
+            
         }
 
         ///Weapon event, because trigger enter/stay... SUCKS need to hide and show the collision volume. Based on the anim event of the sword swing.
@@ -151,13 +165,45 @@ public class PlayerManager : MonoBehaviour
     
     void BasicRangedAttack()
     {
-        playerAc.SetTrigger("Attack1h1");
-        playerAc.SetFloat("animSpeed", 0.5f);
+        ////If enabled, this animation calls "hitting" event which starts the collision hitzone. So...can't use this anim with current hitzone behvaiour
+        ////of fucking course.
+        //playerAc.SetTrigger("Attack1h1");
+        //playerAc.SetFloat("animSpeed", 0.5f);
+                
+        if(beginRangeCooldown == false)
+        {
+            GameObject fireball;
+            canMoveSpell = false;
+            fireball = Instantiate(sp_fireball.gameObject, hitZone.transform.position, transform.rotation);
+            beginRangeCooldown = true;
+            playerAc.SetTrigger("Hit1");
+        }
+        
+        
     }
 
     void CheckMoveState()
     {
-        canMove = !playerAc.GetCurrentAnimatorStateInfo(0).IsName("Attack1h1");  //canMove is opposite of attack state
+        canMoveAnim = !playerAc.GetCurrentAnimatorStateInfo(0).IsName("Attack1h1");  //canMove is opposite of attack state
+        
+    }
+
+    void RangeCooldown()
+    {
+        Debug.Log(rangeCooldown);
+
+        if(beginRangeCooldown == true)
+        {
+            rangeCooldown = rangeCooldown - Time.deltaTime;
+        }
+        
+        if (rangeCooldown <= 0.0f)
+        {
+            canMoveSpell = true;
+            beginRangeCooldown = false;
+            rangeCooldown = 0.5f;
+        }
+        
     }
 
 }

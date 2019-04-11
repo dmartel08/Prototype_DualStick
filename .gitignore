@@ -6,7 +6,7 @@
 Assets/AssetStoreTools*
 
 #Fuck the library
-END_Unity/Library/*
+END_Unity/Library
 
 # Visual Studio cache directory
 .vs/

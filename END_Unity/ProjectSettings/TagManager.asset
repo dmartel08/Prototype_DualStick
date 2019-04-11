@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - P1_Trigger
+  - P1_HitZone
+  - Fireball
+  - Enemy
   layers:
   - Default
   - TransparentFX
