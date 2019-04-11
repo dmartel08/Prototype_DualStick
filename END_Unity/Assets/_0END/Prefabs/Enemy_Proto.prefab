@@ -1180,8 +1180,8 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 71672048082265191}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
+  m_IsTrigger: 1
+  m_Enabled: 0
   m_Radius: 2.03
   m_Height: 7.2
   m_Direction: 1
@@ -1788,7 +1788,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5436709675353915854}
   - component: {fileID: 4525096106104502999}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Enemy_HitZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}

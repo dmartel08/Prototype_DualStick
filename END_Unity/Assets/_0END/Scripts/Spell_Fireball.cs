@@ -8,6 +8,8 @@ public class Spell_Fireball : MonoBehaviour
     public float projectileSpeed = 5.0f;
     public float projectileLife;
 
+    public EnemyManager enemy_M = null;
+
     void Start()
     {
 
@@ -20,12 +22,13 @@ public class Spell_Fireball : MonoBehaviour
         this.transform.position += transform.forward * Time.deltaTime * projectileSpeed;
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        float health = other.GetComponent<EnemyManager>().health;
-        if (other == GameObject.FindGameObjectWithTag("Enemy").GetComponent<Collider>())
-            health = health - 10; 
-    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    Debug.Log("FUCKING DO SOMETHING" + other.gameObject);
+
+    //    other.gameObject.GetComponent<EnemyManager>().health = other.gameObject.GetComponent<EnemyManager>().health - 30.0f;
+       
+    //}
 
        
-    }
+ }
