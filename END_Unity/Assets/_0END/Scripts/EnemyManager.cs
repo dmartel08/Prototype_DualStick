@@ -133,7 +133,6 @@ public class EnemyManager : MonoBehaviour
         {
 
             if (gM.player1_M.weaponEvent.hitting == true)
-            if (gM.player1_M.weaponEvent.hitting == true)
             {
                 Debug.Log("I the " + this.gameObject + "am hit by SWORD!");
                 AC.SetTrigger("Hit1");

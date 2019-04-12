@@ -1152,7 +1152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemySpeed: 2.5
   AC: {fileID: 0}
-  health: 100
+  health: 1000
   damage: 0
   found: 0
   gotHit: 0
@@ -1788,7 +1788,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5436709675353915854}
   - component: {fileID: 4525096106104502999}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Enemy_HitZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
