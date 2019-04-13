@@ -9,8 +9,9 @@ public class PlayerManager : MonoBehaviour
 {
     private GameObject player;
     private Rigidbody playerRb;
-    public float playerSpeed = 2.5f;
+    public float playerSpeed;
 
+    
     public Animator playerAc;
 
     AnimatorStateInfo animState;
@@ -18,9 +19,17 @@ public class PlayerManager : MonoBehaviour
     public bool canMoveAnim;
     public bool canMoveSpell;
 
+    [Space(10)]
+    [Header("Dash")]
+    public float dashDistance;
+    public bool canDash = true;
+    private float dashCooldown = 2.0f;
+    public bool beginDashCooldown;
+
     /// <summary>
     /// Set these in inspector because "Find" is fucking stupid.
     /// </summary>
+    [Space(10)]
     [Header("Attacking stuff")]
     public Player_AnimEvent weaponEvent;
     [Space(10)]
@@ -44,7 +53,8 @@ public class PlayerManager : MonoBehaviour
         playerRb = this.GetComponent<Rigidbody>();
         playerAc = this.GetComponentInChildren<Animator>();
         animState = playerAc.GetCurrentAnimatorStateInfo(0);
-
+        playerSpeed = 3.5f;
+        dashDistance = 4.0f;
         weaponEvent = this.GetComponentInChildren<Player_AnimEvent>();
         canMoveAnim = true;
         canMoveSpell = true;
@@ -63,6 +73,7 @@ public class PlayerManager : MonoBehaviour
     private void FixedUpdate()
     {
         RangeCooldown();
+        DashCooldown();
     }
 
     // Update is called once per frame
@@ -110,6 +121,29 @@ public class PlayerManager : MonoBehaviour
         Vector3 input_Lstick = new Vector3(Input.GetAxisRaw("Horizontal"), 0.0f, Input.GetAxisRaw("Vertical"));
         Vector3 input_Rstick = new Vector3(Input.GetAxisRaw("RStick_Horizontal"), 0.0f, -Input.GetAxisRaw("RStick_Vertical"));
 
+        Vector3 dashVelocity = new Vector3(0,0,0); //declare dash to 0
+
+        //--------------------------------------       
+        /// Basically, layermask bitshift whatever number on the right is as the layer. In this case, 0 is default.
+        /// Also, physics raycast logic to detect if character is in the air. If they are, disable drag so they fall properly.
+        /// A hack to having a high drag when dashing, but no drag when falling. Hooray, I hacked something by myself. Where's my cookie.
+        int layerMask = 1 << 0;
+        Vector3 rayOffset = transform.position + new Vector3(0,1,0);
+        if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 1, transform.position.z),transform.TransformDirection(Vector3.down), out RaycastHit  hit, 1.1f, layerMask) != true )
+        {
+            Debug.Log("I'm in the air!");
+            Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), transform.TransformDirection(Vector3.down), Color.yellow);
+            playerRb.drag = 0;
+            canDash = false;
+        }
+        else
+        {
+            playerRb.drag = 10;
+            canDash = true;
+        }
+        //--------------------------------------
+
+
         playerRb.MovePosition(transform.position + input_Lstick * Time.deltaTime * playerSpeed);
 
         if (input_Lstick.x != 0 || input_Lstick.z != 0)
@@ -119,14 +153,22 @@ public class PlayerManager : MonoBehaviour
             {
                 playerRb.transform.rotation = Quaternion.LookRotation(input_Lstick);
                 lookInversion = 1;
-                Debug.Log("if a");
+                /// DRAG MATTERS, dashDistance is distance, drag function (as implemented here) is the slowdown rate. A "quick dash" is high drag. 
+                /// But do NOT do     playerRb.drag + (number chagned here)   instead   change the drag on the component itself (the rigidbody in inspector)
+                /// I don't understand the math... or drag (and increases drag fucks the gravity but that's been fixed with raycast in Movement() function
+                /// ((high drag slow fall...but at least dash comes to a halt))
+                dashVelocity = Vector3.Scale(input_Lstick, dashDistance * new Vector3((Mathf.Log(1f / (Time.deltaTime * playerRb.drag + 1)) / -Time.deltaTime), 0, (Mathf.Log(1f / (Time.deltaTime * playerRb.drag + 1)) / -Time.deltaTime)));
+                
             }
 
             if (input_Rstick.x != 0 || input_Rstick.z != 0)
             {
                 playerRb.transform.rotation = Quaternion.LookRotation(input_Rstick);
                 lookInversion = -1;
-                Debug.Log("if b");
+                /// Since right stick is pushed as well as left, don't want to dash towards the right stick, want to dash in the direction of movement (left stick). 
+                /// Was -transform.forward, but that's dumb as fuck since you can be looking down and moving left (not up) with left stick.
+                /// just use the left stick you dumb bitch.
+                dashVelocity = Vector3.Scale(input_Lstick, dashDistance * new Vector3((Mathf.Log(1f / (Time.deltaTime * playerRb.drag + 1)) / -Time.deltaTime), 0, (Mathf.Log(1f / (Time.deltaTime * playerRb.drag + 1)) / -Time.deltaTime)));
             }
 
             playerAc.SetFloat("speedh", input_Lstick.x);
@@ -136,16 +178,27 @@ public class PlayerManager : MonoBehaviour
         else if (input_Rstick.x != 0 || input_Rstick.z != 0)
         {
             playerRb.transform.rotation = Quaternion.LookRotation(input_Rstick);
-            Debug.Log("if b");
         }
 
-        if (Input.GetKey(KeyCode.LeftShift) || Input.GetButton("L_Bumper"))
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetButtonDown("L_Bumper"))
         {
-            playerSpeed = 4.0f;
+            Debug.Log("L Bumper was pressed");
+            Debug.Log(dashVelocity);
+            if(canDash)
+            {
+                if(beginDashCooldown == false)
+                {
+                    playerRb.AddForce(dashVelocity, ForceMode.VelocityChange);
+                    beginDashCooldown = true;
+                }
+                
+            }
+            
         }
         else
         {
-            playerSpeed = 2.5f;
+            playerSpeed = 3.5f;
         }
     }
 
@@ -204,6 +257,22 @@ public class PlayerManager : MonoBehaviour
             rangeCooldown = 0.5f;
         }
         
+    }
+
+    void DashCooldown()
+    {
+        Debug.Log(dashCooldown);
+
+        if(beginDashCooldown == true)
+        {
+            dashCooldown = dashCooldown - Time.deltaTime;
+        }
+        
+        if(dashCooldown <= 0.0f)
+        {
+            beginDashCooldown = false;
+            dashCooldown =2.0f;
+        }
     }
 
 }

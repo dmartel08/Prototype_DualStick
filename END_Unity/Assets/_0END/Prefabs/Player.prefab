@@ -107,6 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSpeed: 2
+  dashDistance: 0
   playerAc: {fileID: 0}
   canMoveAnim: 0
   canMoveSpell: 0
@@ -117,7 +118,6 @@ MonoBehaviour:
   meleeAttack: 0
   sp_fireball: {fileID: 3271449630239120713, guid: 467b55a1b32b3a6428c4c908a03ea923,
     type: 3}
-  rangeCooldown: 1
   beginRangeCooldown: 0
 --- !u!136 &2465229995302271104
 CapsuleCollider:
@@ -142,7 +142,7 @@ Rigidbody:
   m_GameObject: {fileID: 2465229995302271106}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 10
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -244,6 +244,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2465229995302271166}
     m_Modifications:
+    - target: {fileID: 1349150361055734, guid: dca8e056b77d49c4aafe4dbcc2bab713, type: 3}
+      propertyPath: m_Name
+      value: SKELETON
+      objectReference: {fileID: 0}
     - target: {fileID: 4655139138601034, guid: dca8e056b77d49c4aafe4dbcc2bab713, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -287,10 +291,6 @@ PrefabInstance:
     - target: {fileID: 4655139138601034, guid: dca8e056b77d49c4aafe4dbcc2bab713, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1349150361055734, guid: dca8e056b77d49c4aafe4dbcc2bab713, type: 3}
-      propertyPath: m_Name
-      value: SKELETON
       objectReference: {fileID: 0}
     - target: {fileID: 95690985424869934, guid: dca8e056b77d49c4aafe4dbcc2bab713,
         type: 3}
