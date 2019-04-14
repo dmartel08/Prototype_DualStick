@@ -44,7 +44,7 @@ public class PlayerManager : MonoBehaviour
     [Space(10)]
     [Header("Spells")]
     public Spell_Fireball sp_fireball;
-    private float rangeCooldown = 0.5f;
+    private float rangeCooldown = 3f;
     public bool beginRangeCooldown;
 
     // Start is called before the first frame update
@@ -249,12 +249,19 @@ public class PlayerManager : MonoBehaviour
         {
             rangeCooldown = rangeCooldown - Time.deltaTime;
         }
-        
+
+        /// This is a hacked way of allowing movement without having declare variables separately for the "spell (hit1)" animation
+        /// the animation is about 0.5f seconds, so subtract that from whatever the rangeCooldown is.
+        if (rangeCooldown <= 2.5f)
+        {
+            canMoveSpell = true;
+        }
+
         if (rangeCooldown <= 0.0f)
         {
             canMoveSpell = true;
             beginRangeCooldown = false;
-            rangeCooldown = 0.5f;
+            rangeCooldown = 3f;
         }
         
     }

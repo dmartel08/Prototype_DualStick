@@ -107,10 +107,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSpeed: 2
-  dashDistance: 0
   playerAc: {fileID: 0}
   canMoveAnim: 0
   canMoveSpell: 0
+  dashDistance: 0
+  canDash: 1
+  beginDashCooldown: 0
   weaponEvent: {fileID: 0}
   trigger: {fileID: 1202659853}
   sword: {fileID: 7861953930338580314}
@@ -218,8 +220,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6434845068243222261}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.989, z: 0.549}
-  m_LocalScale: {x: 0.6839525, y: 0.75363, z: 1.0494957}
+  m_LocalPosition: {x: 0.027, y: 0.989, z: 0.674}
+  m_LocalScale: {x: 0.47821486, y: 0.75363, z: 1.0494957}
   m_Children: []
   m_Father: {fileID: 2465229995302271166}
   m_RootOrder: 2

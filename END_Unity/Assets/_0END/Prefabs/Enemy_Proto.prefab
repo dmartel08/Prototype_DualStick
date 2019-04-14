@@ -1152,10 +1152,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemySpeed: 2.5
   AC: {fileID: 0}
-  health: 1000
+  health: 100
   damage: 0
   found: 0
   gotHit: 0
+  meleeHitCount: 1
+  spellHitCount: 1
 --- !u!54 &1365909011
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1180,8 +1182,8 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 71672048082265191}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 0
+  m_IsTrigger: 0
+  m_Enabled: 1
   m_Radius: 2.03
   m_Height: 7.2
   m_Direction: 1

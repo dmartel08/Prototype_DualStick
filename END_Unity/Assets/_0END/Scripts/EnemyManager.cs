@@ -7,6 +7,7 @@ public class EnemyManager : MonoBehaviour
 {
     GameManager gM;
     private Rigidbody enemyRb;
+    private Collider enemyCol;
     public float enemySpeed = 2.5f;
 
     public Animator AC;
@@ -14,8 +15,9 @@ public class EnemyManager : MonoBehaviour
 
     private NavMeshAgent agent;
 
-    public float health = 100;
+    public float health = 50;
     public float damage = 0;
+    public bool living = true;
 
     private enum FIGHTSTATE
     {
@@ -31,12 +33,17 @@ public class EnemyManager : MonoBehaviour
     public bool found = false;
     public bool gotHit = false;
 
+    public int meleeHitCount = 1;
+    public int spellHitCount = 1;
 
     void Start()
     {
+        living = true; //Spawn this as true...otherwise it spawns the unit at whatever the last bool state was.....which could be dead!
         gM = FindObjectOfType<GameManager>();
         AC = this.GetComponent<Animator>();
         agent = this.GetComponent<NavMeshAgent>();
+        enemyRb = this.GetComponent<Rigidbody>();
+        enemyCol = this.GetComponent<Collider>();
 
         behaviour = (int)FIGHTSTATE.engaging;
     }
@@ -48,42 +55,57 @@ public class EnemyManager : MonoBehaviour
 
     void EnemyBehaviour(int state)
     {
-        if(state == (int)FIGHTSTATE.idle)
+        if (state != (int)FIGHTSTATE.dead)  //being dead trumps everything
         {
-            //do nothing
-        }
+                if (state == (int)FIGHTSTATE.idle)
+            {
+                //do nothing
+            }
 
-        if(state == (int)FIGHTSTATE.engaging)
-        {
-            agent.isStopped = false; //allow agent to seek again
-            agent.destination = gM.player1GO.transform.position;
-            AC.SetFloat("speedh", 1);
-        }
+            if(state == (int)FIGHTSTATE.engaging)
+            {
+                agent.isStopped = false; //allow agent to seek again
+                agent.destination = gM.player1GO.transform.position;
+                AC.SetFloat("speedh", 1);
+            }
 
-        if (state == (int)FIGHTSTATE.attacking)
-        {
+            if (state == (int)FIGHTSTATE.attacking)
+            {
 
-            if (AC.GetCurrentAnimatorStateInfo(0).IsName("Attack1h1"))
+                if (AC.GetCurrentAnimatorStateInfo(0).IsName("Attack1h1"))
+                {
+                    agent.isStopped = true; //stop the agent from seeking/moving
+                    agent.velocity = Vector3.zero; //any latent velocity should be zerod (no momentum)
+                }
+                
+                if (!AC.GetCurrentAnimatorStateInfo(0).IsName("Attack1h1"))
+                {
+                
+                    this.transform.LookAt(gM.player1GO.transform.position);
+                    AC.SetTrigger("Attack1h1");
+                }
+            
+            }
+
+            if(state == (int)FIGHTSTATE.damaged)
             {
                 agent.isStopped = true; //stop the agent from seeking/moving
                 agent.velocity = Vector3.zero; //any latent velocity should be zerod (no momentum)
+
             }
-                
-            if (!AC.GetCurrentAnimatorStateInfo(0).IsName("Attack1h1"))
-            {
-                
-                this.transform.LookAt(gM.player1GO.transform.position);
-                AC.SetTrigger("Attack1h1");
-            }
-            
+
         }
 
-        if(state == (int)FIGHTSTATE.damaged)
+        if(state == (int)FIGHTSTATE.dead)
         {
-            agent.isStopped = true; //stop the agent from seeking/moving
-            agent.velocity = Vector3.zero; //any latent velocity should be zerod (no momentum)
-           // health = health - damage;
+            Debug.Log("Fuck me I'm dead " + this.gameObject);
+            AC.SetTrigger("Fall1");
+            living = false;
+            enemyRb.isKinematic = true;
+            enemyCol.enabled = false;
 
+            Destroy(this.gameObject, 3.0f);
+            
         }
     }
 
@@ -102,9 +124,14 @@ public class EnemyManager : MonoBehaviour
         
 
         if(found == true)
-            {
-            behaviour = (int)FIGHTSTATE.attacking;
-            }
+        {
+        behaviour = (int)FIGHTSTATE.attacking;
+        }
+
+        if(health <= 0)
+        {
+            behaviour = (int)FIGHTSTATE.dead;
+        }
 
         return behaviour;
     }
@@ -113,6 +140,8 @@ public class EnemyManager : MonoBehaviour
     {
         Debug.Log("THE FINISHED HIT WAS HIT");
         gotHit = false;
+        meleeHitCount = 1;
+        spellHitCount = 1;
     }
 
     /// <summary>
@@ -120,35 +149,51 @@ public class EnemyManager : MonoBehaviour
     /// </summary>
     private void OnTriggerEnter(Collider other)
     {
-
-        Collider playerTrigger = gM.player1_M.trigger;
-
-        if (other == playerTrigger)
+        if (living == true)
         {
-            found = true;
-        }
+            Collider playerTrigger = gM.player1_M.trigger;
 
-        ////If in OnTriggerEnter, calls once. (The proper call it would seem)
-        if (other == gM.player1_M.hitZone)  //hitZone, not sword
-        {
-
-            if (gM.player1_M.weaponEvent.hitting == true)
+            if (other == playerTrigger)
             {
-                Debug.Log("I the " + this.gameObject + "am hit by SWORD!");
-                AC.SetTrigger("Hit1");
-                damage = 10;  //set the damage based on weapon, so ranged hitbox might change this to 20
-                gotHit = true;
-                health = health - damage;  //fucking fuck why doesn't this just decrease BY FUCKING TEN
+                found = true;
             }
-        }
 
-        if (other.gameObject.tag == "Fireball")
-        {
-            Debug.Log("I the " + this.gameObject + "am hit by FIREBALL!");
-            AC.SetTrigger("Hit1");
-            damage = 30;  //set the damage based on weapon, so ranged hitbox might change this to 20
-            gotHit = true;
-            this.health = this.health - damage;
+            ////If in OnTriggerEnter, calls once. (The proper call it would seem)
+            if (other == gM.player1_M.hitZone)  //hitZone, not sword
+            {
+
+                if (gM.player1_M.weaponEvent.hitting == true)
+                {
+                   
+
+                    if (meleeHitCount == 1)
+                    {
+                        Debug.Log("I the " + this.gameObject + "am hit by SWORD!");
+                        AC.SetTrigger("Hit1");
+                        damage = 10;  //set the damage based on weapon, so ranged hitbox might change this to 20
+                        gotHit = true;
+                        health = health - damage; 
+                        meleeHitCount = 0;
+                    }
+
+                }
+            }
+
+            if (other.gameObject.tag == "Fireball")
+            {
+                
+
+                if (spellHitCount == 1)
+                {
+                    Debug.Log("I the " + this.gameObject + "am hit by FIREBALL!");
+                    AC.SetTrigger("Hit1");
+                    damage = 20;  //set the damage based on weapon, eventually
+                    gotHit = true;
+                    this.health = this.health - damage;
+                    spellHitCount = 0;
+                }
+
+            }
         }
 
     }
